@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Laboratorio de Información Cuántica y Materia Condensada – Universidad de Costa Rica. Investigación en corrección de errores cuánticos, espintrónica y materiales cuánticos.">
+    <title>Quantum Information and Condensed Matter</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter (clean, modern sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ---------- RESET & VARIABLES ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-page: #0d0d0d;
+            --bg-card: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f0f0;
+            --text-secondary: #9a9a9a;
+            --border-light: 1px solid rgba(255, 255, 255, 0.08);
+            --shadow-card: 0 8px 20px -6px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 20px 25px -8px rgba(0, 0, 0, 0.5);
+            --color-qec: #60a5fa;
+            --color-cmp: #4ade80;
+            --color-inter: #2dd4bf;
+            --glass-bg: rgba(20, 20, 20, 0.85);
+            --border-radius-card: 28px;
+            --border-radius-small: 20px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.65;
+            font-weight: 300;
+            font-size: 0.95rem;
+            scroll-behavior: smooth;
+        }
+
+        /* ---------- TYPOGRAPHY ---------- */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            line-height: 1.08;
+            margin-bottom: 1.2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            border-bottom: var(--border-light);
+            padding-bottom: 0.6rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 0.6rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 640px;
+            margin-bottom: 0;
+            margin-inline: auto;
+            text-align: center;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .pub-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        .pub-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 350;
+            letter-spacing: 0.03em;
+        }
+
+        .pub-legend-item .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* ---------- LAYOUT ---------- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+        }
+
+        section {
+            padding: 4.5rem 0;
+            scroll-margin-top: 5rem;
+        }
+
+        .section-divider {
+            max-width: 1280px;
+            /* MARGEN: El primer numero es el espacio SUPERIOR (distancia con lo de arriba) */
+            /* El tercer valor es el espacio INFERIOR (distancia con "Investigacion") */
+            margin: 2.5rem auto 4.0rem;
+            /* <--- AQUI ES */
+            padding: 0 2.5rem;
+            position: relative;
+        }
+
+        /* glow aura behind the line */
+        .section-divider::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 32px;
+            background: radial-gradient(ellipse at center,
+                    rgba(45, 212, 191, 0.12) 0%,
+                    rgba(45, 212, 191, 0.04) 40%,
+                    transparent 70%);
+            pointer-events: none;
+        }
+
+        /* the visible line */
+        .section-divider::after {
+            content: '';
+            display: block;
+            height: 3px;
+            border-radius: 3px;
+            position: relative;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(96, 165, 250, 0.5) 15%,
+                    rgba(45, 212, 191, 0.7) 50%,
+                    rgba(74, 222, 128, 0.5) 85%,
+                    transparent 100%);
+            box-shadow:
+                0 0 8px rgba(45, 212, 191, 0.25),
+                0 0 20px rgba(45, 212, 191, 0.1);
+        }
+
+        /* ---------- HEADER (glassmorphism) ---------- */
+        /* ---------- HEADER (Dynamic Smart Reveal) ---------- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent;
+            /* Transparent at top */
+            border-bottom: 1px solid transparent;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.4s ease,
+                border-color 0.4s ease,
+                backdrop-filter 0.4s ease;
+        }
+
+        /* State: Scrolled down (Hidden) */
+        header.nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* State: Scrolled up (Visible + Glass) */
+        header.nav-visible {
+            transform: translateY(0);
+            background: rgba(10, 10, 10, 0.6);
+            /* Very subtle dark tint */
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            position: relative;
+            transition: padding 0.3s ease;
+        }
+
+        /* Compact padding when scrolled */
+        header.nav-visible nav {
+            padding: 0.8rem 0;
+        }
+
+        .logo a {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: opacity 0.2s;
+        }
+
+        .logo a:hover {
+            opacity: 0.7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 1rem;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text-primary);
+        }
+
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--text-primary);
+        }
+
+        /* Hamburger menu button (hidden by default on desktop) */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        /* ---------- HERO (Seccion Principal) ---------- */
+        .hero {
+            /* PADDING-TOP: Controla que tan abajo empieza el titulo principal (distancia con el menu) */
+            padding: 6.0rem 0 2.5rem;
+        }
+
+        .hero h1 {
+            /* MARGIN-BOTTOM: Espacio entre el Titulo Principal y el texto de abajo */
+            margin-bottom: 2.5rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            /* MARGIN-BOTTOM: Espacio entre este texto y los iconos/keywords de abajo */
+            margin-bottom: 1.8rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .hero-accent {
+            display: flex;
+            /* GAP: Espacio horizontal entre los iconos/keywords */
+            gap: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-accent span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .hero-accent i {
+            color: var(--color-inter);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* subtle glitch flicker on hero icons */
+        @keyframes glitch-flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            40% {
+                opacity: 1;
+            }
+
+            42% {
+                opacity: 0.55;
+                filter: hue-rotate(10deg);
+            }
+
+            44% {
+                opacity: 1;
+                filter: none;
+            }
+
+            82% {
+                opacity: 1;
+            }
+
+            83% {
+                opacity: 0.65;
+                filter: hue-rotate(-8deg);
+            }
+
+            85% {
+                opacity: 1;
+                filter: none;
+            }
+        }
+
+        .hero-icon-glitch {
+            display: inline-block;
+            animation: glitch-flicker 6s infinite;
+            will-change: opacity, transform;
+        }
+
+        .hero-accent span:nth-child(1) .hero-icon-glitch {
+            animation-delay: 0s;
+        }
+
+        .hero-accent span:nth-child(2) .hero-icon-glitch {
+            animation-delay: 1.3s;
+        }
+
+        .hero-accent span:nth-child(3) .hero-icon-glitch {
+            animation-delay: 2.6s;
+        }
+
+        /* ---------- RESEARCH: convergence layout ---------- */
+        .research-pillars {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            margin: 2.5rem 0 0;
+            align-items: stretch;
+        }
+
+        .pillar-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border: var(--border-light);
+            border-radius: var(--border-radius-card);
+            padding: 2.2rem 2rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .pillar-card.pillar-qec::before {
+            background: linear-gradient(90deg, var(--color-qec), transparent);
+        }
+
+        .pillar-card.pillar-cmp::before {
+            background: linear-gradient(90deg, transparent, var(--color-cmp));
+        }
+
+        .pillar-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .pillar-card:focus-within {
+            box-shadow: var(--shadow-hover);
+            outline: 2px solid var(--color-inter);
+            outline-offset: 2px;
+        }
+
+        .pillar-number {
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+        }
+
+        .pillar-number span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            margin-right: 0.6rem;
+        }
+
+        .pillar-qec .pillar-number span {
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--color-qec);
+        }
+
+        .pillar-cmp .pillar-number span {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--color-cmp);
+        }
+
+        .pillar-icon {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .pillar-card h3 {
+            font-size: 1.2rem;
+            font-weight: 350;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.01em;
+        }
+
+        .pillar-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .pillar-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .keyword {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: var(--border-light);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .pillar-card:hover .keyword {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .pillar-qec .keyword {
+            color: var(--color-qec);
+            border-color: rgba(96, 165, 250, 0.25);
+        }
+
+        .pillar-cmp .keyword {
+            color: var(--color-cmp);
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+
+        /* --- Connector bridge between pillars --- */
+        .pillar-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+
+        .connector-line {
+            width: 2px;
+            flex-grow: 1;
+            background: linear-gradient(180deg,
+                    var(--color-qec) 0%,
+                    var(--color-inter) 50%,
+                    var(--color-cmp) 100%);
+            opacity: 0.3;
+            border-radius: 2px;
+        }
+
+        .connector-node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-inter);
+            font-size: 0.85rem;
+            margin: 0.6rem 0;
+            flex-shrink: 0;
+        }
+
+        /* --- Intersection card (full-width bridge) --- */
+        .intersection-card {
+            margin-top: 1.5rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border: var(--border-light);
+            border-radius: var(--border-radius-card);
+            padding: 2rem 2.2rem;
+            box-shadow: var(--shadow-card);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .intersection-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-qec), var(--color-inter), var(--color-cmp));
+        }
+
+        .intersection-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .intersection-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(45, 212, 191, 0.1), rgba(74, 222, 128, 0.1));
+            border: 1px solid rgba(45, 212, 191, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--color-inter);
+            flex-shrink: 0;
+        }
+
+        .intersection-text h3 {
+            font-size: 1.15rem;
+            font-weight: 350;
+            margin-bottom: 0.3rem;
+        }
+
+        .intersection-text p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.65;
+        }
+
+        .intersection-keywords {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .intersection-keywords .keyword {
+            border-color: rgba(45, 212, 191, 0.2);
+            color: var(--color-inter);
+        }
+
+        /* ---------- TEAM (Asymmetrical Split) ---------- */
+        .team-group {
+            /* No longer used in this layout, but kept for safety */
+            margin-bottom: 4rem;
+        }
+
+        .team-split-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        @media (min-width: 900px) {
+            .team-split-layout {
+                grid-template-columns: 0.8fr 1.2fr;
+                /* 40% - 60% split */
+                gap: 5rem;
+                align-items: start;
+            }
+        }
+
+        /* Left Column */
+        .team-intro {
+            position: sticky;
+            top: 6rem;
+        }
+
+        .hiring-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: fit-content;
+        }
+
+        .hiring-badge i {
+            font-size: 0.8rem;
+        }
+
+        .team-intro h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-intro p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 90%;
+        }
+
+        /* Right Column (Grid) */
+        .team-grid-right {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 4rem 2rem;
+        }
+
+        .team-member-split {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            /* Left align */
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .team-member-split:hover {
+            transform: translateY(-5px);
+        }
+
+        .member-avatar-split {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .team-member-split:hover .member-avatar-split {
+            border-color: var(--color-inter);
+        }
+
+        .member-avatar-split i {
+            font-size: 2.5rem;
+            color: var(--text-secondary);
+        }
+
+        .member-name-split {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .member-role-split {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-inter);
+            /* Teal color */
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .member-bio-split {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .member-socials-split {
+            display: flex;
+            gap: 15px;
+        }
+
+        .member-socials-split i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .team-member-split:hover .member-socials-split i {
+            color: var(--color-inter);
+            opacity: 1;
+        }
+
+        /* ---------- TEAM (Clean Avatar Grid) ---------- */
+        .team-group {
+            margin-bottom: 4rem;
+        }
+
+        .team-category {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            color: var(--color-inter);
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .team-grid-clean {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 3rem 2rem;
+            justify-content: center;
+        }
+
+        /* Centering adjustment for small groups */
+        .team-group:has(.team-grid-clean > :nth-last-child(1):nth-child(1)) .team-grid-clean {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 1 item */
+        .team-group:has(.team-grid-clean > :nth-last-child(2):nth-child(1)) .team-grid-clean {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+        }
+
+        /* 2 items */
+
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .member-avatar {
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .team-member:hover .member-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            border-color: var(--color-inter);
+        }
+
+        .member-avatar i {
+            font-size: 3.5rem;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            transition: color 0.3s ease;
+        }
+
+        .team-member:hover .member-avatar i {
+            color: var(--color-inter);
+            opacity: 1;
+        }
+
+        .member-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+            transition: color 0.2s ease;
+        }
+
+        .team-member:hover .member-name {
+            color: var(--color-inter);
+        }
+
+        .member-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 0.8rem;
+        }
+
+        .member-socials {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-member:hover .member-socials {
+            opacity: 1;
+        }
+
+        .member-socials i {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* ---------- TEAM (Compact Leaderboard) ---------- */
+        .team-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .team-category {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            border-left: none;
+            padding-left: 0;
+            opacity: 0.8;
+        }
+
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            /* Divider line look */
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .team-row {
+            display: grid;
+            grid-template-columns: 48px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: rgba(20, 20, 20, 0.4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .team-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            padding-left: 1.5rem;
+            /* Subtle slide */
+        }
+
+        .team-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .team-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-inter);
+            font-size: 1.1rem;
+        }
+
+        .team-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .team-name {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .team-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+            font-weight: 300;
+        }
+
+        .team-action {
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.2s ease;
+        }
+
+        .team-row:hover .team-action {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--color-inter);
+        }
+
+        /* ---------- TEAM (clean, interactive) ---------- */
+        .team-group {
+            margin-bottom: 3rem;
+        }
+
+        .team-category {
+            font-size: 1.4rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-left: 3px solid var(--color-inter);
+            padding-left: 1rem;
+        }
+
+        /* LEADERS: Flex layout, centered, larger */
+        .team-leaders {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .leader-card {
+            width: 100%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.08);
+            /* Slightly lighter than standard card */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .leader-card .team-name {
+            font-size: 1.35rem;
+            color: var(--color-inter);
+            font-weight: 400;
+        }
+
+        .leader-card .team-role {
+            font-size: 0.9rem;
+            border-bottom: none;
+            margin-bottom: 0.2rem;
+        }
+
+        .team-alias {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        /* STUDENTS: Grid layout (reusing team-grid but adjusting margin) */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border: var(--border-light);
+            border-radius: var(--border-radius-card);
+            padding: 2rem 1.8rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-card:hover {
+            box-shadow: var(--shadow-hover);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .team-card:focus-visible {
+            outline: 2px solid var(--color-inter);
+            outline-offset: 2px;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .team-icon {
+            font-size: 2rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .team-name {
+            font-size: 1.15rem;
+            font-weight: 350;
+            margin-bottom: 0.25rem;
+            color: var(--color-inter);
+        }
+
+        .team-role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: var(--border-light);
+        }
+
+        /* Remove border bottom for leader card role specifically if needed, 
+           but general rule applies. Overridden above for leaders. */
+
+        .team-click {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: auto;
+        }
+
+        .team-click i {
+            font-size: 0.8rem;
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover .team-click i {
+            transform: translateX(4px);
+        }
+
+        /* ---------- MODAL (glassmorphism) ---------- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--border-radius-card);
+            max-width: 500px;
+            width: 90%;
+            padding: 2.5rem;
+            border: var(--border-light);
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalFadeIn 0.25s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.2s;
+            line-height: 1;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus-visible {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-name {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-role {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-bio {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .modal-links a {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            transition: color 0.2s;
+            padding: 0.25rem;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-links a:hover,
+        .modal-links a:focus-visible {
+            color: var(--color-inter);
+        }
+
+        /* ---------- PUBLICATIONS ---------- */
+        .pub-list {
+            list-style: none;
+        }
+
+        .pub-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            padding: 1.5rem 0;
+            border-bottom: var(--border-light);
+        }
+
+        .pub-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .qec-dot {
+            background: var(--color-qec);
+        }
+
+        .cmp-dot {
+            background: var(--color-cmp);
+        }
+
+        .inter-dot {
+            background: var(--color-inter);
+        }
+
+        .pub-title {
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .pub-authors,
+        .pub-journal {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Clickable Pub Item */
+        .pub-item-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: background 0.2s ease;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin: -0.5rem;
+            /* compensate padding */
+        }
+
+        .pub-item-link:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .pub-item-link:hover .pub-title {
+            color: var(--color-qec);
+        }
+
+        /* Compact mode overrides */
+        .pub-item {
+            padding: 0.8rem 0;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .pub-title {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 0.15rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        /* All Pubs Modal List */
+        .all-pubs-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .all-pubs-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .all-pubs-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .all-pubs-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .all-pub-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .all-pub-item:last-child {
+            border-bottom: none;
+        }
+
+        .all-pub-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .all-pub-link:hover .pub-title {
+            color: var(--color-cmp);
+        }
+
+        .pub-view-all {
+            display: inline-block;
+            color: var(--color-inter);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-inter);
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .pub-view-all:hover,
+        .pub-view-all:focus-visible {
+            opacity: 0.7;
+        }
+
+        /* Color legend for the publications subtitle */
+        .legend-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.25rem;
+            vertical-align: middle;
+        }
+
+        .legend-qec {
+            background: var(--color-qec);
+        }
+
+        .legend-cmp {
+            background: var(--color-cmp);
+        }
+
+        .legend-inter {
+            background: var(--color-inter);
+        }
+
+        /* ---------- CONTACT ---------- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            border: var(--border-light);
+            border-radius: var(--border-radius-card);
+            padding: 2.8rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+        }
+
+        .contact-item i {
+            font-size: 1.3rem;
+            color: var(--color-inter);
+            width: 28px;
+            text-align: center;
+            margin-top: 0.15rem;
+        }
+
+        .contact-item strong {
+            font-weight: 500;
+        }
+
+        .contact-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-link:hover,
+        .contact-link:focus-visible {
+            color: var(--color-inter);
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            padding: 2.5rem 0;
+            border-top: var(--border-light);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        footer .footer-meta {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 900px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            .research-pillars {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .pillar-connector {
+                flex-direction: row;
+                padding: 0.5rem 0;
+            }
+
+            .connector-line {
+                height: 2px;
+                width: auto;
+                flex-grow: 1;
+            }
+
+            .intersection-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .intersection-icon-wrap {
+                margin: 0 auto;
+            }
+
+            .intersection-keywords {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background: #1a1a1a;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.4);
+                padding: 0.75rem 0;
+                z-index: 200;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 1rem 2.5rem;
+                font-size: 1.05rem;
+            }
+
+            .nav-links a.active::after {
+                display: none;
+            }
+
+            .hero {
+                padding: 3rem 0 2rem;
+            }
+
+            .hero-accent {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.1rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .contact-grid {
+                padding: 1.8rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="#home">QICM Lab</a></div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="#home" class="active">Inicio</a>
+                <a href="#research">Investigación</a>
+                <a href="#team">Equipo</a>
+                <a href="#publications">Publicaciones</a>
+                <a href="#contact">Contacto</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO / HOME -->
+        <section id="home" class="hero container">
+            <h1>Quantum Information<br>and Condensed Matter</h1>
+            <p class="tagline">Investigación en corrección de errores cuánticos y estudio de sistemas de materia
+                condensada mediante métodos de primeros principios, con énfasis en espintrónica y materiales 2D.
+
+            </p>
+            <div class="hero-accent">
+                <span><span class="hero-icon-glitch"
+                        style="color: var(--color-qec); font-size: 1.2em; font-family: 'Times New Roman', serif; font-style: italic;">ψ</span>
+                    Quantum Error Correction</span>
+                <span><span class="hero-icon-glitch"><i class="fas fa-cube"></i></span> Condensed Matter Physics &
+                    Materials
+                    Science</span>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- RESEARCH (convergence layout) -->
+        <section id="research" class="container">
+            <h1>Investigación</h1>
+            <p class="section-subtitle">Dos áreas de vanguardia y gran relevancia: la corrección de errores cuánticos y
+                la física de la materia condensada, esta última con un enfoque novedoso en espintrónica y materiales 2D.
+
+            </p>
+
+            <div class="research-pillars">
+                <!-- Pillar 1: QEC -->
+                <div class="pillar-card pillar-qec">
+                    <h3 style="font-weight:bold;">Quantum Error Correction</h3>
+                    <div class="pillar-icon" style="display:flex;justify-content:center;">
+                        <!-- Bloch Sphere SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="206" height="206"
+                            style="overflow:visible;">
+                            <defs>
+                                <radialGradient id="sphereGlow" cx="40%" cy="35%" r="55%">
+                                    <stop offset="0%" stop-color="rgba(96,165,250,0.12)" />
+                                    <stop offset="100%" stop-color="rgba(96,165,250,0)" />
+                                </radialGradient>
+                                <filter id="blochGlow">
+                                    <feGaussianBlur stdDeviation="2" result="blur" />
+                                    <feMerge>
+                                        <feMergeNode in="blur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- Ambient glow -->
+                            <circle cx="100" cy="100" r="72" fill="url(#sphereGlow)" />
+                            <!-- Sphere outline -->
+                            <circle cx="100" cy="100" r="64" fill="none" stroke="rgba(96,165,250,0.35)"
+                                stroke-width="1.8" />
+                            <!-- Back meridian (Y-Z plane, dashed) -->
+                            <ellipse cx="100" cy="100" rx="20" ry="64" fill="none" stroke="rgba(96,165,250,0.12)"
+                                stroke-width="1.2" stroke-dasharray="4 3" />
+                            <!-- Equator ellipse -->
+                            <ellipse cx="100" cy="100" rx="64" ry="18" fill="none" stroke="rgba(96,165,250,0.25)"
+                                stroke-width="1.2" stroke-dasharray="4 3">
+                                <animateTransform attributeName="transform" type="rotate" values="0 100 100;360 100 100"
+                                    dur="30s" repeatCount="indefinite" />
+                            </ellipse>
+                            <!-- Z axis (vertical) -->
+                            <line x1="100" y1="28" x2="100" y2="172" stroke="rgba(96,165,250,0.2)" stroke-width="1.0" />
+                            <!-- X axis -->
+                            <line x1="36" y1="100" x2="164" y2="100" stroke="rgba(96,165,250,0.15)"
+                                stroke-width="1.0" />
+                            <!-- Rotating State Vector Group -->
+                            <g>
+                                <animateTransform attributeName="transform" type="rotate" values="0 100 100;360 100 100"
+                                    dur="12s" repeatCount="indefinite" />
+                                <!-- State vector |ψ⟩ -->
+                                <line x1="100" y1="100" x2="135" y2="52" stroke="#60a5fa" stroke-width="1.8"
+                                    filter="url(#blochGlow)" stroke-linecap="round" />
+                                <!-- State vector arrowhead -->
+                                <polygon points="135,52 128,60 138,59" fill="#60a5fa" filter="url(#blochGlow)" />
+                                <!-- State point -->
+                                <circle cx="135" cy="52" r="3" fill="#93c5fd" filter="url(#blochGlow)">
+                                    <animate attributeName="r" values="3;4;3" dur="2.5s" repeatCount="indefinite" />
+                                    <animate attributeName="opacity" values="1;0.7;1" dur="2.5s"
+                                        repeatCount="indefinite" />
+                                </circle>
+                                <!-- |ψ⟩ label on state vector (counter-rotated to stay upright) -->
+                                <text x="140" y="48" fill="#93c5fd" font-size="11" font-family="serif"
+                                    font-style="italic" filter="url(#blochGlow)">|ψ⟩
+                                    <animateTransform attributeName="transform" type="rotate"
+                                        values="0 140 48;-360 140 48" dur="12s" repeatCount="indefinite" />
+                                </text>
+                            </g>
+                            <!-- |0⟩ label (top, static) -->
+                            <text x="100" y="24" fill="rgba(148,163,184,0.8)" font-size="11" font-family="serif"
+                                font-style="italic" text-anchor="middle">|0⟩</text>
+                            <!-- |1⟩ label (bottom, static) -->
+                            <text x="100" y="184" fill="rgba(148,163,184,0.8)" font-size="11" font-family="serif"
+                                font-style="italic" text-anchor="middle">|1⟩</text>
+                        </svg>
+                    </div>
+                    <p>Desarrollo de códigos cuánticos de baja densidad de comprobación de paridad (LDPC) y
+                        arquitecturas bosónicas (como códigos GKP) para la computación cuántica tolerante a fallos.
+                        Investigación en protocolos de destilación de entrelazamiento y esquemas de supresión de
+                        decoherencia mediante decodificadores eficientes, optimizando la robustez de los procesadores
+                        cuánticos escalables.
+                    </p>
+                    <div class="pillar-keywords">
+                        <span class="keyword">QEC</span>
+                        <span class="keyword">Códigos LDPC</span>
+                        <span class="keyword">Fault-Tolerance</span>
+                        <span class="keyword">GKP CODES</span>
+                    </div>
+                </div>
+
+                <!-- Connector -->
+                <div class="pillar-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-node"><i class="fas fa-arrows-left-right"></i></div>
+                    <div class="connector-line"></div>
+                </div>
+
+                <!-- Pillar 2: CMP -->
+                <div class="pillar-card pillar-cmp">
+                    <h3 style="font-weight:bold;">Condensed Matter Physics & Materials Science</h3>
+                    <div class="pillar-icon"
+                        style="display:flex;justify-content:center; align-items:center; height: 200px;">
+                        <!-- User provided image -->
+                        <img src="unnamed.png" alt="Brillouin Zone Diagram"
+                            style="width: 220px; height: auto; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));">
+                    </div>
+                    <p>Ingeniería de espín y manipulación de la interacción Dzyaloshinskii-Moriya (DMI) en materiales 2D
+                        (MXenes) para la generación de skyrmions y otras cuasipartículas con protección topológica.
+                        Simulación de fases magnéticas no colineales y fenómenos emergentes en sistemas de electrones
+                        fuertemente correlacionados, orientados al desarrollo de dispositivos de espintrónica de próxima
+                        generación.</p>
+                    <div class="pillar-keywords">
+                        <span class="keyword">Topología</span>
+                        <span class="keyword">Skyrmions</span>
+                        <span class="keyword">Materiales 2D</span>
+                        <span class="keyword">SPIN ENGINEERING</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- TEAM (interactive cards) -->
+        <section id="team" class="container">
+
+            <div class="team-split-layout">
+                <!-- Left Column: Intro -->
+                <div class="team-intro">
+                    <h1>Equipo de Investigación</h1>
+                    <p>Somos un grupo interdisciplinario apasionado por la ciencia cuántica. Integramos química, física
+                        e ingeniería para explorar y proponer nuevos materiales, tecnologías y algoritmos en computación
+                        y sensado cuántico.</p>
+                </div>
+
+                <!-- Right Column: Grid -->
+                <div class="team-grid-right">
+                    <!-- Mauricio -->
+                    <div class="team-member-split" data-person="mauricio" tabindex="0" role="button"
+                        aria-label="Ver perfil de Mauricio Gutiérrez">
+                        <div class="member-avatar-split"><i class="fas fa-user-astronaut"></i></div>
+                        <div class="member-name-split">Mauricio Gutiérrez A.</div>
+                        <div class="member-role-split">Profesor Asociado</div>
+                        <div class="member-bio-split">Investigación en corrección de errores cuánticos, química
+                            computacional y sensado. Mentores: Kenneth R. Brown y Markus Müller.</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-graduation-cap"></i>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <!-- Ignacio -->
+                    <div class="team-member-split" data-person="tu" tabindex="0" role="button"
+                        aria-label="Ver perfil de J. Ignacio Borge">
+                        <div class="member-avatar-split"><i class="fas fa-user-graduate"></i></div>
+                        <div class="member-name-split">J. Ignacio Borge</div>
+                        <div class="member-role-split">Investigador Posdoctoral</div>
+                        <div class="member-bio-split">PhD en Materia Condensada. Especialista en fases topológicas,
+                            magnetismo y simulaciones de materiales cuánticos.</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-graduation-cap"></i>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <!-- Guillermo -->
+                    <div class="team-member-split" data-person="est1" tabindex="0" role="button"
+                        aria-label="Ver perfil de Guillermo Escobar">
+                        <div class="member-avatar-split"><i class="fas fa-user"></i></div>
+                        <div class="member-name-split">Guillermo Escobar</div>
+                        <div class="member-role-split">Doctorado (QEC)</div>
+                        <div class="member-bio-split">Implementación de códigos</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <!-- Daniel -->
+                    <div class="team-member-split" data-person="est2" tabindex="0" role="button"
+                        aria-label="Ver perfil de Daniel Serrano">
+                        <div class="member-avatar-split"><i class="fas fa-user"></i></div>
+                        <div class="member-name-split">Daniel Serrano</div>
+                        <div class="member-role-split">Maestría (CMP)</div>
+                        <div class="member-bio-split">Simulación de skyrmions magnéticos en materiales 2D. Intereses:
+                            texturas magnéticas y dispositivos espintrónicos.</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <!-- Marcos -->
+                    <div class="team-member-split" data-person="est3" tabindex="0" role="button"
+                        aria-label="Ver perfil de Marcos Jiménez">
+                        <div class="member-avatar-split"><i class="fas fa-user"></i></div>
+                        <div class="member-name-split">Marcos Jiménez</div>
+                        <div class="member-role-split">Licenciatura (Sensado)</div>
+                        <div class="member-bio-split">Sensado cuántico con centros NV en diamante. Intereses: detección
+                            de campos magnéticos a nanoescala.</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+
+                    <!-- Estudiante 4 -->
+                    <div class="team-member-split" data-person="est4" tabindex="0" role="button"
+                        aria-label="Ver perfil de Estudiante_4">
+                        <div class="member-avatar-split"><i class="fas fa-user"></i></div>
+                        <div class="member-name-split">Estudiante_4</div>
+                        <div class="member-role-split">Pregrado (QEC)</div>
+                        <div class="member-bio-split">Simulación de circuitos cuánticos con ruido. Intereses:
+                            decoherencia, mitigación de errores y algoritmos variacionales.</div>
+                        <div class="member-socials-split">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL (hidden by default) -->
+        <div id="personModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="modal-name" id="modalName"></div>
+                <div class="modal-role" id="modalRole"></div>
+                <div class="modal-bio" id="modalBio"></div>
+                <div class="modal-links" id="modalLinks"></div>
+            </div>
+        </div>
+
+        <!-- ALL PUBS MODAL -->
+        <div id="allPubsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="allPubsTitle">
+            <div class="modal-content" style="max-width: 700px;">
+                <button class="modal-close" id="allPubsClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="modal-name" id="allPubsTitle" style="margin-bottom: 1rem;">Lista Completa de Publicaciones
+                </div>
+                <div id="allPubsContainer">
+                    <ul class="all-pubs-list" id="allPubsList">
+                        <!-- JS injected -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- PUBLICATIONS -->
+        <section id="publications" class="container">
+            <h1>Publicaciones recientes</h1>
+            <p class="section-subtitle">Una selección de artículos que reflejan nuestras líneas de investigación.</p>
+            <div class="pub-legend">
+                <span class="pub-legend-item"><span class="legend-dot legend-qec"></span>Corrección de Errores</span>
+                <span class="pub-legend-item"><span class="legend-dot legend-cmp"></span>Materia Condensada</span>
+                <span class="pub-legend-item"><span class="legend-dot legend-inter"></span>Intersección</span>
+            </div>
+            <ul class="pub-list">
+                <!-- 1. Intersección: QEC + Sensing -->
+                <li class="pub-item">
+                    <span class="pub-dot inter-dot" style="margin-top: 0.6rem;"></span>
+                    <a href="https://arxiv.org/abs/2511.04018" target="_blank" class="pub-item-link">
+                        <div>
+                            <div class="pub-title">Quantum error correction for multiparameter metrology</div>
+                            <div class="pub-authors">M. Gutiérrez, C. Mukhopadhyay, V. Montenegro, A. Bayat</div>
+                            <div class="pub-journal">arXiv:2511.04018 (2025)</div>
+                        </div>
+                    </a>
+                </li>
+                <!-- 2. QEC: Spin Qubits -->
+                <li class="pub-item">
+                    <span class="pub-dot qec-dot" style="margin-top: 0.6rem;"></span>
+                    <a href="https://arxiv.org/abs/2506.17190" target="_blank" class="pub-item-link">
+                        <div>
+                            <div class="pub-title">Comparison of spin-qubit architectures for quantum error-correcting
+                                codes</div>
+                            <div class="pub-authors">M. Gutiérrez, J.S. Rojas-Arias, D. Obando, C.Y. Chang</div>
+                            <div class="pub-journal">arXiv:2506.17190 (2025)</div>
+                        </div>
+                    </a>
+                </li>
+                <!-- 3. QEC: Bacon-Shor -->
+                <li class="pub-item">
+                    <span class="pub-dot qec-dot" style="margin-top: 0.6rem;"></span>
+                    <a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.111.032427" target="_blank"
+                        class="pub-item-link">
+                        <div>
+                            <div class="pub-title">Improved performance of the Bacon-Shor code with Steane's syndrome
+                                extraction method</div>
+                            <div class="pub-authors">G. Escobar-Arrieta, M. Gutiérrez</div>
+                            <div class="pub-journal">Physical Review A 111, 032427 (2025)</div>
+                        </div>
+                    </a>
+                </li>
+                <!-- 4. CMP: Materials/GNN -->
+                <li class="pub-item">
+                    <span class="pub-dot cmp-dot" style="margin-top: 0.6rem;"></span>
+                    <a href="https://pubs.rsc.org/en/content/articlehtml/2025/cp/d5cp02208h" target="_blank"
+                        class="pub-item-link">
+                        <div>
+                            <div class="pub-title">Explainable GNN-derived structure–property relationships in
+                                interstitial-alloy materials</div>
+                            <div class="pub-authors">E. Aguilar-Bejarano, L. Arrieta, M. Gutiérrez, et al.</div>
+                            <div class="pub-journal">Physical Chemistry Chemical Physics 27, 22240 (2025)</div>
+                        </div>
+                    </a>
+                </li>
+                <!-- 5. CMP: Carbide -->
+                <li class="pub-item">
+                    <span class="pub-dot cmp-dot" style="margin-top: 0.6rem;"></span>
+                    <a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=BnC-tAMAAAAJ&sortby=pubdate&citation_for_view=BnC-tAMAAAAJ:WF5omc3nYNoC"
+                        target="_blank" class="pub-item-link">
+                        <div>
+                            <div class="pub-title">Unlocking Carbide Vacancy Energy in Molybdenum Carbide: Predictive
+                                Insights</div>
+                            <div class="pub-authors">K. Tovar, M. Coto-Jiménez, M. Gutiérrez, I. Borge</div>
+                            <div class="pub-journal">IEEE 5th Int. Conf. BioInspired Processing (2023)</div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <div style="text-align: right; margin-top: 2rem;">
+                <a href="#" class="pub-view-all" id="openPubsModal">Ver todas →</a>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- CONTACT -->
+        <section id="contact" class="container">
+            <h2>Contacto</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <i class="fas fa-map-pin"></i>
+                    <div><strong>Dirección</strong><br>Escuela de Química, UCR<br>San José, Costa Rica</div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div><strong>Email</strong><br>mauricio.gutierrez@ucr.ac.cr<br></div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-globe"></i>
+                    <div><strong>Enlaces</strong><br><a href="#" class="contact-link">GitHub</a> · <a href="#"
+                            class="contact-link">arXiv</a> · <a href="#" class="contact-link">UCR</a></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Quantum Information and Condensed Matter · Universidad de Costa Rica</p>
+            <p
+                style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.8; color: #84cc16; text-shadow: 0 0 5px rgba(132, 204, 22, 0.4);">
+                Diseñado por J. Ignacio Borge
+            </p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT: modal interactivo + active nav + hamburger menu -->
+    <script>
+        (function () {
+            // --- SMART REVEAL NAVBAR LOGIC ---
+            const header = document.querySelector('header');
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+
+            function updateNav() {
+                const scrollY = window.scrollY;
+
+                // At the very top: Transparent and visible
+                if (scrollY < 50) {
+                    header.classList.remove('nav-hidden');
+                    header.classList.remove('nav-visible');
+                    // Ensure transparent background at top
+                    header.style.background = 'transparent';
+                    header.style.backdropFilter = 'none';
+                    header.style.webkitBackdropFilter = 'none';
+                    header.style.borderBottom = '1px solid transparent';
+                }
+                // Scrolling Down: Hide
+                else if (scrollY > lastScrollY) {
+                    header.classList.add('nav-hidden');
+                    header.classList.remove('nav-visible');
+                }
+                // Scrolling Up: Show with Glass
+                else {
+                    header.classList.remove('nav-hidden');
+                    header.classList.add('nav-visible');
+                    // Reset inline styles to let CSS class take over
+                    header.style.background = '';
+                    header.style.backdropFilter = '';
+                    header.style.webkitBackdropFilter = '';
+                    header.style.borderBottom = '';
+                }
+
+                lastScrollY = scrollY;
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateNav);
+                    ticking = true;
+                }
+            });
+
+            // Datos de las personas
+            const peopleData = {
+                mauricio: {
+                    name: 'Mauricio Gutiérrez A. (Maiwol)',
+                    role: 'Profesor Asociado · Escuela de Química, UCR',
+                    bio: 'Soy profesor asociado en la Escuela de Química de la Universidad de Costa Rica. Mi investigación gira en torno a la corrección de errores cuánticos, aunque también me interesan la química computacional, el sensado cuántico y, en general, todo lo relacionado con lo cuántico. He tenido la fortuna de formarme con mentores destacados, incluyendo al profesor <a href="https://brownlab.pratt.duke.edu/" target="_blank" style="color:var(--color-qec);text-decoration:none;">Kenneth R. Brown</a>, mi director de doctorado, y al profesor <a href="https://mueller.fz-juelich.de/" target="_blank" style="color:var(--color-qec);text-decoration:none;">Markus Müller</a>, mi asesor postdoctoral.',
+                    links: {
+                        scholar: '#', orcid: '#', email: '#'
+                    }
+                },
+                tu: {
+                    name: 'J. Ignacio Borge (Nacho)',
+                    role: 'Investigador Posdoctoral · UCR',
+                    bio: 'PhD en Física de la Materia Condensada. Experiencia en fases topológicas, magnetismo cuántico y espintrónica. Actualmente explorando materiales para plataformas de corrección de errores y sensado cuántico. Interés en la simulación de nuevos materiales cuánticos.',
+                    links: {
+                        scholar: '#', orcid: '#', email: '#'
+                    }
+                },
+                est1: {
+                    name: 'Guillermo Escobar',
+                    role: 'Estudiante de Doctorado (QEC)',
+                    bio: 'Proyecto: Implementación de códigos cuánticos en hardware superconductor. Intereses: códigos LDPC cuánticos, decodificadores eficientes, simulación de circuitos con ruido.',
+                    links: { email: '#' }
+                },
+                est2: {
+                    name: 'Daniel Serrano',
+                    role: 'Estudiante de Maestría (CMP - Spintrónica)',
+                    bio: 'Proyecto: Simulación de skyrmions magnéticos en materiales 2D. Intereses: texturas magnéticas, dispositivos espintrónicos, dicalcogenuros de metales de transición.',
+                    links: { email: '#' }
+                },
+                est3: {
+                    name: 'Marcos Jiménez',
+                    role: 'Estudiante de Licenciatura (Sensado)',
+                    bio: 'Proyecto: Sensado cuántico con centros NV en diamante. Intereses: detección de campos magnéticos a nanoescala, óptica cuántica, materiales para sensado.',
+                    links: { email: '#' }
+                },
+                est4: {
+                    name: 'Estudiante_4',
+                    role: 'Estudiante de Pregrado (QEC)',
+                    bio: 'Proyecto: Simulación de circuitos cuánticos con ruido. Intereses: decoherencia, mitigación de errores, algoritmos variacionales.',
+                    links: { email: '#' }
+                }
+            };
+
+            const modal = document.getElementById('personModal');
+            const modalName = document.getElementById('modalName');
+            const modalRole = document.getElementById('modalRole');
+            const modalBio = document.getElementById('modalBio');
+            const modalLinks = document.getElementById('modalLinks');
+            const closeBtn = document.getElementById('modalClose');
+
+            // Abrir modal al hacer clic o Enter en cualquier tarjeta
+            document.querySelectorAll('.team-member-split').forEach(card => {
+                function openCard() {
+                    const personKey = card.dataset.person;
+                    const data = peopleData[personKey];
+                    if (!data) return;
+
+                    modalName.textContent = data.name;
+                    modalRole.textContent = data.role;
+                    modalBio.innerHTML = data.bio;
+
+                    // construir links
+                    let linksHtml = '';
+                    if (data.links.scholar) linksHtml += `<a href="${data.links.scholar}" aria-label="Google Scholar"><i class="fas fa-graduation-cap"></i></a>`;
+                    if (data.links.orcid) linksHtml += `<a href="${data.links.orcid}" aria-label="ORCID"><i class="fab fa-orcid"></i></a>`;
+                    if (data.links.email) linksHtml += `<a href="mailto:${data.links.email}" aria-label="Email"><i class="fas fa-envelope"></i></a>`;
+                    modalLinks.innerHTML = linksHtml;
+
+                    modal.style.display = 'flex';
+                    closeBtn.focus();
+                }
+
+                card.addEventListener('click', openCard);
+                card.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openCard();
+                    }
+                });
+            });
+
+            // cerrar modal
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+            closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+
+            // Hamburger menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            menuToggle.addEventListener('click', function () {
+                const isOpen = navLinks.classList.toggle('open');
+                menuToggle.setAttribute('aria-expanded', isOpen);
+                const icon = menuToggle.querySelector('i');
+                icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+            });
+
+            // Close mobile menu when a link is clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.querySelector('i').className = 'fas fa-bars';
+                });
+            });
+
+            // Active nav on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const allNavLinks = document.querySelectorAll('.nav-links a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                allNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // --- PUBLICACIONES MODAL LOGIC ---
+            const allPublications = [
+                {
+                    title: "Quantum error correction for multiparameter metrology",
+                    authors: "M Gutiérrez, C Mukhopadhyay, V Montenegro, A Bayat",
+                    journal: "arXiv preprint arXiv:2511.04018 (2025)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:ULOm3_A8WrAC"
+                },
+                {
+                    title: "Comparison of spin-qubit architectures for quantum error-correcting codes",
+                    authors: "M Gutiérrez, JS Rojas-Arias, D Obando, CY Chang",
+                    journal: "arXiv preprint arXiv:2506.17190 (2025)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:kNdYIx-mwKoC"
+                },
+                {
+                    title: "Improved performance of the Bacon-Shor code with Steane's syndrome extraction method",
+                    authors: "G Escobar-Arrieta, M Gutiérrez",
+                    journal: "Physical Review A 111 (3), 032427 (2025)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:3fE2CSJIrl8C"
+                },
+                {
+                    title: "Explainable GNN-derived structure–property relationships in interstitial-alloy materials",
+                    authors: "E Aguilar-Bejarano, L Arrieta, M Gutiérrez, E Özcan, S Woodward, ...",
+                    journal: "Physical Chemistry Chemical Physics 27 (41), 22240 (2025)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:YOwf2qJgpHMC"
+                },
+                {
+                    title: "Explainable GNN-Derived Structure-Property Relationships in Interstitial-Alloy Materials",
+                    authors: "I Borge-Durán, EA Bejarano, LA Araya, MG Arguedas, E Özcan, ...",
+                    journal: "Preprint (2024)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:Zph67rFs4hoC"
+                },
+                {
+                    title: "Unlocking Carbide Vacancy Energy in Molybdenum Carbide: Predictive Insights",
+                    authors: "K Tovar, M Coto-Jiménez, M Gutierrez, I Borge",
+                    journal: "IEEE 5th Int. Conf. BioInspired Processing (2023)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=BnC-tAMAAAAJ&sortby=pubdate&citation_for_view=BnC-tAMAAAAJ:WF5omc3nYNoC"
+                },
+                {
+                    title: "Fault-tolerant protection of near-term trapped-ion topological qubits under realistic noise sources",
+                    authors: "A Bermudez, X Xu, M Gutiérrez, SC Benjamin, M Müller",
+                    journal: "Physical Review A 100 (6), 062307 (2019)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:8k81kl-MbHgC"
+                },
+                {
+                    title: "Transversality and lattice surgery: Exploring realistic routes toward coupled logical qubits with trapped-ion quantum processors",
+                    authors: "M Gutiérrez, M Müller, A Bermúdez",
+                    journal: "Physical Review A 99 (2), 022330 (2019)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:UebtZRa9Y70C"
+                },
+                {
+                    title: "Quantum error correction decoheres noise",
+                    authors: "SJ Beale, JJ Wallman, M Gutiérrez, KR Brown, R Laflamme",
+                    journal: "Physical review letters 121 (19), 190501 (2018)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:8k81kl-MbHgC"
+                },
+                {
+                    title: "Coherence in quantum error-correcting codes",
+                    authors: "SJ Beale, JJ Wallman, M Gutiérrez, KR Brown, R Laflamme",
+                    journal: "arXiv preprint arXiv:1805.08802 (2018)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:hqOjcs7Dif8C"
+                },
+                {
+                    title: "Simulating the performance of a distance-3 surface code in a linear ion trap",
+                    authors: "CJ Trout, M Li, M Gutiérrez, Y Wu, ST Wang, L Duan, KR Brown",
+                    journal: "New Journal of Physics 20 (4), 043038 (2018)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:3fE2CSJIrl8C"
+                },
+                {
+                    title: "Fault-tolerant quantum error detection",
+                    authors: "NM Linke, M Gutierrez, KA Landsman, C Figgatt, S Debnath, KR Brown, ...",
+                    journal: "Science advances 3 (10), e1701074 (2017)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:LkGwnXOMwfcC"
+                },
+                {
+                    title: "Fault tolerance with bare ancillary qubits for a [[7, 1, 3]] code",
+                    authors: "M Li, M Gutiérrez, SE David, A Hernandez, KR Brown",
+                    journal: "Physical Review A 96 (3), 032341 (2017)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:Tyk-4Ss8FVUC"
+                },
+                {
+                    title: "Errors and pseudothresholds for incoherent and coherent noise",
+                    authors: "M Gutiérrez, C Smith, L Lulushi, S Janardan, KR Brown",
+                    journal: "Physical Review A 94 (4), 042338 (2016)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:UeHWp8X0CEIC"
+                },
+                {
+                    title: "Analytical error analysis of Clifford gates by the fault-path tracer method",
+                    authors: "S Janardan, Y Tomita, M Gutiérrez, KR Brown",
+                    journal: "Quantum Information Processing 15 (8), 3065-3079 (2016)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:2osOgNQ5qMEC"
+                },
+                {
+                    title: "Experimental demonstration of quantum fault tolerance",
+                    authors: "NM Linke, M Gutierrez, KA Landsman, C Figgatt, S Debnath, KR Brown, ...",
+                    journal: "arXiv preprint arXiv:1611.06946 (2016)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:IjCSPb-OGe4C"
+                },
+                {
+                    title: "Comparison of a quantum error-correcting threshold for exact and approximate errors",
+                    authors: "M Gutiérrez, KR Brown",
+                    journal: "Physical Review A 91 (2), 022335 (2015)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:d1gkVwhDpl0C"
+                },
+                {
+                    title: "Comparison of ancilla preparation and measurement procedures for the Steane [[7, 1, 3]] code",
+                    authors: "Y Tomita, M Gutiérrez, C Kabytayev, KR Brown, MR Hutsel, AP Morris, ...",
+                    journal: "Phys. Rev. A 88, 042336 (2013)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:u-x6o8ySG0sC"
+                },
+                {
+                    title: "Approximation of realistic errors by Clifford channels and Pauli measurements",
+                    authors: "M Gutiérrez, L Svec, A Vargo, KR Brown",
+                    journal: "Phys. Rev. A 87, 030302 (2013)",
+                    link: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XMla-DIAAAAJ&sortby=pubdate&citation_for_view=XMla-DIAAAAJ:u5HHmVD_uO8C"
+                }
+            ];
+
+            const allPubsModal = document.getElementById('allPubsModal');
+            const allPubsList = document.getElementById('allPubsList');
+            const openPubsBtn = document.getElementById('openPubsModal');
+            const closePubsBtn = document.getElementById('allPubsClose');
+
+            function renderAllPubs() {
+                allPubsList.innerHTML = allPublications.map(pub => `
+                    <li class="all-pub-item">
+                        <a href="${pub.link}" target="_blank" class="all-pub-link">
+                            <div class="pub-title" style="font-weight:500;">${pub.title}</div>
+                            <div class="pub-authors" style="font-size:0.85rem; margin-top:0.3rem;">${pub.authors}</div>
+                            <div class="pub-journal" style="font-size:0.8rem; margin-top:0.2rem;">${pub.journal}</div>
+                        </a>
+                    </li>
+                `).join('');
+            }
+
+            if (openPubsBtn) {
+                openPubsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    renderAllPubs();
+                    allPubsModal.classList.add('active');
+                });
+            }
+
+            if (closePubsBtn) {
+                closePubsBtn.addEventListener('click', () => {
+                    allPubsModal.classList.remove('active');
+                });
+            }
+
+            // Close when clicking outside content (for both modals)
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none'; // Keep original behavior for person modal
+                }
+                if (e.target === allPubsModal) {
+                    allPubsModal.classList.remove('active');
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

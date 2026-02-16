@@ -24,7 +24,11 @@
         }
 
         :root {
-            --bg-page: #0d0d0d;
+            --bg-page: #09090b;
+            /* Deep dark blue-black */
+            --bg-gradient:
+                radial-gradient(circle at 15% 50%, rgba(34, 211, 238, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.08), transparent 25%);
             --bg-card: rgba(255, 255, 255, 0.06);
             --text-primary: #f0f0f0;
             --text-secondary: #9a9a9a;
@@ -42,11 +46,28 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-page);
+            background-image: var(--bg-gradient);
             color: var(--text-primary);
             line-height: 1.65;
             font-weight: 300;
             font-size: 0.95rem;
             scroll-behavior: smooth;
+            position: relative;
+            /* Needed for pseudo-element positioning */
+        }
+
+        /* Noise Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            /* Fixed to cover viewport even on scroll */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
         }
 
         /* ---------- TYPOGRAPHY ---------- */
@@ -1690,7 +1711,7 @@
                     <div class="pillar-icon"
                         style="display:flex;justify-content:center; align-items:center; height: 200px;">
                         <!-- User provided image -->
-                        <img src="unnamed.png" alt="Brillouin Zone Diagram"
+                        <img src="bz.png" alt="Brillouin Zone Diagram"
                             style="width: 220px; height: auto; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));">
                     </div>
                     <p>Ingeniería de espín y manipulación de la interacción Dzyaloshinskii-Moriya (DMI) en materiales 2D
@@ -1729,7 +1750,10 @@
                     <!-- Mauricio -->
                     <div class="team-member-split" data-person="mauricio" tabindex="0" role="button"
                         aria-label="Ver perfil de Mauricio Gutiérrez">
-                        <div class="member-avatar-split"><i class="fas fa-user-astronaut"></i></div>
+                        <div class="member-avatar-split">
+                            <img src="MGA.jpeg" alt="Mauricio Gutiérrez A."
+                                style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                        </div>
                         <div class="member-name-split">Mauricio Gutiérrez A.</div>
                         <div class="member-role-split">Profesor Asociado</div>
                         <div class="member-bio-split">Investigación en corrección de errores cuánticos, química
@@ -1743,7 +1767,10 @@
                     <!-- Ignacio -->
                     <div class="team-member-split" data-person="tu" tabindex="0" role="button"
                         aria-label="Ver perfil de J. Ignacio Borge">
-                        <div class="member-avatar-split"><i class="fas fa-user-graduate"></i></div>
+                        <div class="member-avatar-split">
+                            <img src="IBD.jpg" alt="J. Ignacio Borge"
+                                style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                        </div>
                         <div class="member-name-split">J. Ignacio Borge</div>
                         <div class="member-role-split">Investigador Posdoctoral</div>
                         <div class="member-bio-split">PhD en Materia Condensada. Especialista en fases topológicas,
